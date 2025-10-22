@@ -6,6 +6,8 @@
 }
 
 @theme inline {
+  --color-accent2: #27407e;
+
 
   --radius-sm: calc(var(--radius) - 4px);
 

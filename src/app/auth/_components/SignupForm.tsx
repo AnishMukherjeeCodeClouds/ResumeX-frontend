@@ -1,57 +1,16 @@
 "use client";
 
-import InputOverlappingLabelDemo from "@/components/shadcn-studio/input/input-23";
+import { FormField } from "@/app/auth/_components/FormField";
+import { signupAction } from "@/app/auth/actions";
+import { SignupSchema } from "@/app/auth/schema";
 import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/field";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import React from "react";
-import { Control, Controller, FieldError, useForm } from "react-hook-form";
+import { redirect, RedirectType } from "next/navigation";
+import React, { useCallback } from "react";
+import { FieldError, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-
-const SignupSchema = z
-  .object({
-    name: z
-      .string("Name is required")
-      .trim()
-      .min(2, "Name must be at least 2 characters long")
-      .max(255, "Name must be at most 255 characters long"),
-    username: z
-      .string("Username is required")
-      .trim()
-      .min(3, "Username must be at least 3 characters long")
-      .max(30, "Username must be at most 30 characters long")
-      .regex(
-        /^[a-zA-Z0-9_]+$/,
-        "Username can only contain letters, numbers, and underscores",
-      )
-      .toLowerCase(),
-    email: z
-      .email("Email is required")
-      .max(254, "Email must be at most 254 characters long")
-      .trim()
-      .toLowerCase(),
-    password: z
-      .string("Password is required")
-      .min(8, "Password must be at least 8 characters long")
-      .max(128, "Password must be at most 128 characters long")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/[0-9]/, "Password must contain at least one number")
-      .regex(
-        /[^A-Za-z0-9]/,
-        "Password must contain at least one special character",
-      ),
-    confirmPassword: z
-      .string("Confirm password is required")
-      .min(8, "Confirm password must be at least 8 characters long")
-      .max(128, "Confirm password must be at most 128 characters long"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Passwords do not match",
-  });
 
 function registerError(error: FieldError | undefined) {
   if (!error) return;
@@ -59,41 +18,6 @@ function registerError(error: FieldError | undefined) {
   toast.error(error.message, {
     className: "!text-lg",
   });
-}
-
-function FormField({
-  control,
-  name,
-  label,
-  className,
-  ...props
-}: {
-  control: Control<
-    z.infer<typeof SignupSchema>,
-    any,
-    z.infer<typeof SignupSchema>
-  >;
-  label: string;
-  name: keyof z.infer<typeof SignupSchema>;
-} & Omit<React.ComponentProps<"input">, "name">) {
-  return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState }) => (
-        <Field data-invalid={fieldState.invalid}>
-          <InputOverlappingLabelDemo
-            label={label}
-            className="md:!text-lg md:!py-6 md:!px-5 border-gray-400"
-            labelClassName="md:!text-base md:!left-4"
-            {...field}
-            {...props}
-            aria-invalid={fieldState.invalid}
-          />
-        </Field>
-      )}
-    />
-  );
 }
 
 export function SignupForm() {
@@ -106,7 +30,7 @@ export function SignupForm() {
       password: "",
       confirmPassword: "",
     },
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
   const {
@@ -115,7 +39,6 @@ export function SignupForm() {
     username: usernameError,
     email: emailError,
     confirmPassword: confirmPasswordError,
-    root: rootError,
   } = form.formState.errors;
 
   registerError(nameError);
@@ -124,9 +47,19 @@ export function SignupForm() {
   registerError(emailError);
   registerError(confirmPasswordError);
 
-  const onSubmit = (data: z.infer<typeof SignupSchema>) => {
-    console.log(data);
-  };
+  const onSubmit = useCallback(async (data: z.infer<typeof SignupSchema>) => {
+    const res = await signupAction(data);
+    if (!res.success)
+      toast.error(res.message, {
+        className: "!text-lg",
+      });
+    else {
+      toast.success(res.message, {
+        className: "!text-lg",
+      });
+      redirect("/", RedirectType.replace);
+    }
+  }, []);
 
   return (
     <form

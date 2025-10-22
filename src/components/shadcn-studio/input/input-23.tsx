@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useId } from "react";
 
-const InputOverlappingLabelDemo = ({
+const InputOverlappingLabel = ({
   label,
   className,
   labelClassName,
@@ -34,4 +34,4 @@ const InputOverlappingLabelDemo = ({
   );
 };
 
-export default InputOverlappingLabelDemo;
+export default InputOverlappingLabel;
