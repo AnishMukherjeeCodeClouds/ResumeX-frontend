@@ -1,8 +1,8 @@
 "use client";
 
-import { FormField } from "@/app/auth/_components/FormField";
 import { signupAction } from "@/app/auth/actions";
 import { SignupSchema } from "@/app/auth/schema";
+import { FormInput } from "@/components/form/FormInput";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -73,32 +73,32 @@ export function SignupForm() {
         </p>
       </div>
       <div className="space-y-4">
-        <FormField
+        <FormInput
           control={form.control}
           label="Name"
           placeholder="E.g. Harry"
           name={"name"}
         />
-        <FormField
+        <FormInput
           control={form.control}
           label={"Username"}
           placeholder="E.g. Harry02"
           name={"username"}
         />
-        <FormField
+        <FormInput
           control={form.control}
           label={"Email"}
           placeholder="E.g. harry@mail.com"
           name={"email"}
         />
-        <FormField
+        <FormInput
           control={form.control}
           label={"Password"}
           placeholder="E.g. Abcdefgh@12"
           name={"password"}
           type="password"
         />
-        <FormField
+        <FormInput
           control={form.control}
           label={"Confirm Password"}
           placeholder="Enter the same password as above"

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export function TestimonialsSection() {
   return (
     <section className="py-16 px-10 bg-white">
@@ -16,7 +18,7 @@ export function TestimonialsSection() {
               name: "Sarah M.",
               title: "Software Engineer",
               review:
-                "I landed my dream job in just two weeks after creating my resume here! The templates are amazing.",
+                "I landed my dream job in just two weeks after creating my resume here! The _templates are amazing.",
               avatar: "https://i.pravatar.cc/150?img=32",
               rating: 5,
             },
@@ -50,11 +52,13 @@ export function TestimonialsSection() {
               className="flex flex-col justify-between p-6 bg-gray-50 rounded-xl shadow hover:shadow-lg transition"
             >
               <p className="text-gray-700 text-sm md:text-base mb-4">
-                "{testimonial.review}"
+                &quot;{testimonial.review}&quot;
               </p>
 
               <div className="flex items-center mt-auto space-x-3">
-                <img
+                <Image
+                  height={10}
+                  width={10}
                   src={testimonial.avatar}
                   alt={testimonial.name}
                   className="w-10 h-10 rounded-full object-cover"

@@ -28,16 +28,19 @@ export async function signupAction(signupPayload: unknown) {
       }));
 
     const cookieStore = await cookies();
-    cookieStore.set("access-token", res.accessToken, {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: true,
-    });
-    cookieStore.set("refresh-token", res.refreshToken, {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: true,
-    });
+    cookieStore
+      .set("access-token", res.accessToken, {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: true,
+        maxAge: 60 * 30,
+      })
+      .set("refresh-token", res.refreshToken, {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: true,
+        maxAge: 60 * 60 * 24 * 7,
+      });
 
     return {
       success: true,
@@ -76,11 +79,13 @@ export async function loginAction(loginPayload: unknown) {
         httpOnly: true,
         sameSite: "strict",
         secure: true,
+        maxAge: 60 * 30,
       })
       .set("refresh-token", res.refreshToken, {
         httpOnly: true,
         sameSite: "strict",
         secure: true,
+        maxAge: 60 * 60 * 24 * 7,
       });
 
     return {

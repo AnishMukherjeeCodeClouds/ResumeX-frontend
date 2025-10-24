@@ -1,8 +1,8 @@
 "use client";
 
-import { FormField } from "@/app/auth/_components/FormField";
 import { loginAction } from "@/app/auth/actions";
 import { LoginSchema } from "@/app/auth/schema";
+import { FormInput } from "@/components/form/FormInput";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -62,13 +62,13 @@ export function LoginForm() {
         </p>
       </div>
       <div className="space-y-4">
-        <FormField
+        <FormInput
           control={form.control}
           label={"Email"}
           placeholder="E.g. harry@mail.com"
           name={"email"}
         />
-        <FormField
+        <FormInput
           control={form.control}
           label={"Password"}
           placeholder="E.g. Abcdefgh@12"
@@ -83,7 +83,7 @@ export function LoginForm() {
         Log in
       </Button>
       <p className="text-center">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <Link
           className="cursor-pointer text-blue-900 hover:underline"
           href="/auth/signup"

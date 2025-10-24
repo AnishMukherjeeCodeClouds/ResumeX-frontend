@@ -16,12 +16,15 @@ export function BottomCTASection() {
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-          <Button className="text-lg py-4 px-10 rounded-full bg-white text-accent2 shadow-lg hover:shadow-xl transition">
+          <Button
+            variant="secondary"
+            className="text-lg py-4 px-10 rounded-full text-accent2"
+          >
             Build Your Resume
           </Button>
           <Button
             variant="outline"
-            className="text-lg py-4 px-10 rounded-full border !border-white text-white hover:bg-white hover:text-accent2 shadow hover:shadow-lg transition"
+            className="text-lg py-4 px-10 rounded-full border border-white text-white hover:!bg-accent2/60 hover:text-white"
           >
             See Templates
           </Button>

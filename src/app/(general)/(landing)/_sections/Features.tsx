@@ -19,7 +19,7 @@ export function FeaturesSection() {
             {
               icon: TemplatesIcon,
               title: "Multiple Free Templates",
-              desc: "Choose from a variety of professionally designed resume templates for free.",
+              desc: "Choose from a variety of professionally designed resume _templates for free.",
             },
             {
               icon: PreviewIcon,

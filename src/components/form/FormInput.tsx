@@ -1,0 +1,48 @@
+import { InputOverlappingLabel } from "@/components/shadcn-studio/input/input-23";
+import { Field } from "@/components/ui/field";
+import { cn } from "@/lib/utils";
+import { ComponentProps } from "react";
+import {
+  Controller,
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+} from "react-hook-form";
+
+export function FormInput<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TTransformedValues = TFieldValues,
+>({
+  control,
+  name,
+  label,
+  className,
+  ...props
+}: {
+  control?: ControllerProps<TFieldValues, TName, TTransformedValues>["control"];
+  label: string;
+  name: TName;
+} & Omit<ComponentProps<"input">, "name">) {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState }) => (
+        <Field data-invalid={fieldState.invalid}>
+          <InputOverlappingLabel
+            label={label}
+            className={cn(
+              "md:!text-lg md:!py-6 md:!px-5 border-gray-400",
+              className,
+            )}
+            labelClassName="md:!text-base md:!left-4"
+            {...field}
+            {...props}
+            aria-invalid={fieldState.invalid}
+          />
+        </Field>
+      )}
+    />
+  );
+}

@@ -1,5 +1,7 @@
-import InputOverlappingLabel from "@/components/shadcn-studio/input/input-23";
+import { TextareaWithOverlappingLabel } from "@/components/shadcn-studio/textarea/textarea-13";
 import { Field } from "@/components/ui/field";
+import { cn } from "@/lib/utils";
+import { ComponentProps } from "react";
 import {
   Controller,
   ControllerProps,
@@ -7,7 +9,7 @@ import {
   FieldValues,
 } from "react-hook-form";
 
-export function FormField<
+export function FormTextarea<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
   TTransformedValues = TFieldValues,
@@ -21,16 +23,16 @@ export function FormField<
   control: ControllerProps<TFieldValues, TName, TTransformedValues>["control"];
   label: string;
   name: TName;
-} & Omit<React.ComponentProps<"input">, "name">) {
+} & Omit<ComponentProps<"textarea">, "name">) {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
-          <InputOverlappingLabel
+          <TextareaWithOverlappingLabel
             label={label}
-            className="md:!text-lg md:!py-6 md:!px-5 border-gray-400"
+            className={cn("md:!text-lg border border-gray-400", className)}
             labelClassName="md:!text-base md:!left-4"
             {...field}
             {...props}
