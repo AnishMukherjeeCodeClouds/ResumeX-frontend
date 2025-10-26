@@ -1,3 +1,4 @@
+import { useHookFormError } from "@/app/(general)/(protected)/resume/hooks";
 import { ResumeSchemaType } from "@/app/(general)/(protected)/resume/resume-schema";
 import { FormInput } from "@/components/form/FormInput";
 import { FieldGroup } from "@/components/ui/field";
@@ -5,6 +6,9 @@ import { useFormContext } from "react-hook-form";
 
 export function SocialsForm() {
   const { control } = useFormContext<ResumeSchemaType>();
+
+  useHookFormError("socials");
+
   return (
     <div>
       <p className="text-2xl mb-5">Socials</p>
@@ -14,7 +18,6 @@ export function SocialsForm() {
           label={"LinkedIN URL"}
           name={"socials.linkedIn"}
         />
-        <FormInput control={control} label={"X URL"} name={"socials.X"} />
         <FormInput
           control={control}
           label={"GitHub URL"}

@@ -1,3 +1,4 @@
+import { useHookFormError } from "@/app/(general)/(protected)/resume/hooks";
 import { ResumeSchemaType } from "@/app/(general)/(protected)/resume/resume-schema";
 import { FormInput } from "@/components/form/FormInput";
 import { FormTextarea } from "@/components/form/FormTextarea";
@@ -6,6 +7,9 @@ import { useFormContext } from "react-hook-form";
 
 export function PersonalDetailsForm() {
   const { control } = useFormContext<ResumeSchemaType>();
+
+  useHookFormError("personalDetails");
+
   return (
     <div>
       <p className="text-2xl mb-5">Personal Details</p>
@@ -14,6 +18,11 @@ export function PersonalDetailsForm() {
           control={control}
           label={"Full Name"}
           name={"personalDetails.fullName"}
+        />
+        <FormInput
+          control={control}
+          label={"Designation"}
+          name={"personalDetails.designation"}
         />
         <FormInput
           control={control}

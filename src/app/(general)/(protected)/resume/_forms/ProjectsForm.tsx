@@ -1,12 +1,14 @@
+import { useHookFormError } from "@/app/(general)/(protected)/resume/hooks";
 import {
   MAX_PROJECT_TECHNOLOGIES,
+  MAX_PROJECTS,
   ResumeSchemaType,
 } from "@/app/(general)/(protected)/resume/resume-schema";
 import { FormInput } from "@/components/form/FormInput";
 import { Button } from "@/components/ui/button";
 import { FieldDescription, FieldGroup, FieldSet } from "@/components/ui/field";
 import { PlusIcon, XIcon } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export function ProjectsForm() {
@@ -16,8 +18,10 @@ export function ProjectsForm() {
     name: "projects",
   });
 
-  const [newTechName, setNewTechName] = useState("");
-  const [random, setRandom] = useState(0);
+  const techNameRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [_, setRandom] = useState(0);
+
+  useHookFormError("projects");
 
   return (
     <div>
@@ -25,7 +29,7 @@ export function ProjectsForm() {
       <FieldSet>
         <div className="flex justify-between items-center">
           <FieldDescription className="text-lg">
-            Add up to 3 projects
+            Add up to {MAX_PROJECTS} projects
           </FieldDescription>
           <Button
             variant="outline"
@@ -65,6 +69,7 @@ export function ProjectsForm() {
                   control={control}
                   label="Project Name"
                   name={`projects.${index}.name`}
+                  required
                 />
                 <FormInput
                   control={control}
@@ -108,47 +113,59 @@ export function ProjectsForm() {
                 {/* Technologies Field */}
                 <div className="flex flex-col gap-4">
                   <FieldDescription className="text-lg">
-                    Technologies Used
+                    Technologies Used{" "}
+                    {form.getValues().projects[index].technologies.length <
+                      MAX_PROJECT_TECHNOLOGIES && (
+                      <span>(Add up to {MAX_PROJECT_TECHNOLOGIES})</span>
+                    )}
                   </FieldDescription>
 
                   {/* Input field for new technology */}
-                  <div className="flex items-center gap-2">
-                    <FormInput
-                      name={""}
-                      value={newTechName}
-                      onChange={(e) => setNewTechName(e.target.value)}
-                      label="Add Technology"
-                      placeholder="Enter technology name"
-                      type="text"
-                    />
-                    <Button
-                      variant="outline"
-                      type="button"
-                      disabled={
-                        form.getValues().projects[index].technologies.length >=
-                        MAX_PROJECT_TECHNOLOGIES
-                      }
-                      onClick={() => {
-                        if (newTechName) {
-                          const newTechs = [
-                            ...(form.getValues().projects[index].technologies ||
-                              []),
-                            newTechName,
-                          ];
-                          form.setValue(
-                            `projects.${index}.technologies`,
-                            newTechs,
-                          );
-                          setNewTechName((prev) => "");
+                  {form.getValues().projects[index].technologies.length <
+                    MAX_PROJECT_TECHNOLOGIES && (
+                    <div className="flex items-center gap-2">
+                      <FormInput
+                        name={""}
+                        ref={(el) => {
+                          techNameRefs.current[index] = el;
+                        }}
+                        label="Add Technology"
+                        placeholder="Enter technology name"
+                        type="text"
+                      />
+                      <Button
+                        variant="outline"
+                        type="button"
+                        disabled={
+                          form.getValues().projects[index].technologies
+                            .length >= MAX_PROJECT_TECHNOLOGIES
                         }
-                      }}
-                    >
-                      <PlusIcon />
-                    </Button>
-                  </div>
+                        onClick={() => {
+                          const newTechName =
+                            techNameRefs.current[index]?.value;
+                          if (newTechName) {
+                            const newTechs = [
+                              ...(form.getValues().projects[index]
+                                .technologies ?? []),
+                              newTechName,
+                            ];
+                            form.setValue(
+                              `projects.${index}.technologies`,
+                              newTechs,
+                            );
+                            setRandom(Math.random());
+                          }
+                          if (techNameRefs.current[index])
+                            techNameRefs.current[index].value = "";
+                        }}
+                      >
+                        <PlusIcon />
+                      </Button>
+                    </div>
+                  )}
 
                   {/* List of added technologies */}
-                  <div className="flex flex-col gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     {form
                       .getValues()
                       .projects[
@@ -156,11 +173,12 @@ export function ProjectsForm() {
                       ].technologies.map((technology, techIndex) => (
                         <div
                           key={techIndex}
-                          className="flex justify-between items-center"
+                          className="flex items-center bg-gray-200 rounded-full pl-3"
                         >
                           <span>{technology}</span>
                           <Button
-                            variant="outline"
+                            className="cursor-pointer"
+                            variant="ghost"
                             type="button"
                             onClick={() => {
                               const newTechs = form

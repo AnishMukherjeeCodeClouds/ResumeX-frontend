@@ -1,50 +1,53 @@
+import { useHookFormError } from "@/app/(general)/(protected)/resume/hooks";
 import {
-  MAX_EXPERIENCES,
+  MAX_CERTIFICATIONS,
   ResumeSchemaType,
 } from "@/app/(general)/(protected)/resume/resume-schema";
 import { FormInput } from "@/components/form/FormInput";
-import { FormTextarea } from "@/components/form/FormTextarea";
 import { Button } from "@/components/ui/button";
 import { FieldDescription, FieldGroup, FieldSet } from "@/components/ui/field";
 import { PlusIcon, XIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-export function ExperiencesForm() {
+export function CertificationsForm() {
   const { control } = useFormContext<ResumeSchemaType>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "experiences",
+    name: "certifications",
   });
+
+  useHookFormError("certifications");
+
   return (
     <div>
-      <p className="text-2xl mb-5">Experiences</p>
+      <p className="text-2xl mb-5">Certifications</p>
       <FieldSet>
         <div className="flex justify-between items-center">
           <FieldDescription className="text-lg">
-            Add up to 3 experiences
+            Add up to {MAX_CERTIFICATIONS} certifications
           </FieldDescription>
           <Button
             variant="outline"
             type="button"
-            disabled={fields.length >= MAX_EXPERIENCES}
+            disabled={fields.length >= MAX_CERTIFICATIONS}
             onClick={() =>
               append({
-                organization: "",
-                position: "",
-                description: "",
-                startDate: "",
-                endDate: "",
+                title: "",
+                issuer: "",
+                date: "",
+                url: "",
               })
             }
           >
             <PlusIcon />
           </Button>
         </div>
-        <FieldGroup className="">
-          {fields.map((field, index) => (
-            <div className="flex flex-col gap-4" key={field.id}>
+
+        <FieldGroup>
+          {fields?.map((cert, index) => (
+            <div className="flex flex-col gap-4" key={cert.id}>
               <div className="flex justify-between items-center">
-                <p className="text-lg mb-4">Experience {index + 1}</p>
+                <p className="text-lg mb-4">Certification {index + 1}</p>
                 <Button
                   variant="outline"
                   type="button"
@@ -53,38 +56,38 @@ export function ExperiencesForm() {
                   <XIcon />
                 </Button>
               </div>
+
               <div className="flex flex-col gap-7">
+                {/* Title */}
                 <FormInput
                   control={control}
-                  label={"Organization Name"}
-                  name={`experiences.${index}.organization`}
+                  label="Title"
+                  name={`certifications.${index}.title`}
                 />
+
+                {/* Issuer */}
                 <FormInput
                   control={control}
-                  label={"Position"}
-                  name={`experiences.${index}.position`}
+                  label="Issuer"
+                  name={`certifications.${index}.issuer`}
                 />
-                <FormTextarea
+
+                {/* Date */}
+                <FormInput
+                  className="md:!pt-3 md:!pb-9"
+                  type="date"
                   control={control}
-                  label={"Description"}
-                  name={`experiences.${index}.description`}
+                  label="Date"
+                  name={`certifications.${index}.date`}
                 />
-                <div className="grid grid-cols-2 gap-7">
-                  <FormInput
-                    className="md:!pt-3 md:!pb-9"
-                    type="date"
-                    control={control}
-                    label={"Start Date"}
-                    name={`experiences.${index}.startDate`}
-                  />
-                  <FormInput
-                    className="md:!pt-3 md:!pb-9"
-                    type="date"
-                    control={control}
-                    label={"End Date"}
-                    name={`experiences.${index}.endDate`}
-                  />
-                </div>
+
+                {/* URL */}
+                <FormInput
+                  control={control}
+                  label="URL"
+                  name={`certifications.${index}.url`}
+                  type="url"
+                />
               </div>
             </div>
           ))}
