@@ -1,54 +1,26 @@
 "use client";
 
-import {
-  AnimatedUnderlineTabs
-} from "@/app/(general)/(protected)/resume/_components/FormSwitchTabs";
-import {
-  ResumePreview
-} from "@/app/(general)/(protected)/resume/_forms/ResumePreview";
+import { AnimatedUnderlineTabs } from "@/app/(general)/(protected)/resume/_components/FormSwitchTabs";
+import { ResumePreview } from "@/app/(general)/(protected)/resume/_forms/ResumePreview";
+import { TEMPLATE_INITIAL_STATE } from "@/app/(general)/(protected)/resume/data";
 import {
   ResumeSchema,
-  ResumeSchemaType
+  ResumeSchemaType,
 } from "@/app/(general)/(protected)/resume/resume-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-const INITIAL_STATE: ResumeSchemaType = {
-  template: "Classic",
-  accentColor: "#2563eb",
-  personalDetails: {
-    fullName: "",
-    email: "",
-    phone: "",
-    location: "",
-    designation: "",
-  },
-  socials: {
-    linkedIn: "",
-    github: "",
-    portfolio: "",
-  },
-  summary: "",
-  experiences: [],
-  projects: [],
-  educations: [],
-  skills: [],
-  certifications: [],
-  languages: [],
-  title: "",
-};
-
 export function MainForm() {
   const methods = useForm<ResumeSchemaType>({
-    defaultValues: INITIAL_STATE,
+    defaultValues: TEMPLATE_INITIAL_STATE,
     resolver: zodResolver(ResumeSchema),
     mode: "onChange",
   });
 
   useEffect(() => {
     const existing = window.localStorage.getItem("resume-create-data");
-    methods.reset(existing ? JSON.parse(existing) : INITIAL_STATE);
+    methods.reset(existing ? JSON.parse(existing) : TEMPLATE_INITIAL_STATE);
   }, []);
 
   return (

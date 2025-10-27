@@ -45,8 +45,10 @@ export function HybridTemplateReact({
         <h1 className="text-4xl font-bold mb-1" style={{ color: accentColor }}>
           {data.personalDetails.fullName}
         </h1>
-        {data.title && (
-          <p className="text-lg text-gray-700 font-medium">{data.title}</p>
+        {data.personalDetails.designation && (
+          <p className="text-lg text-gray-700 font-medium">
+            {data.personalDetails.designation}
+          </p>
         )}
         <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-sm text-gray-600">
           {data.personalDetails.email && (

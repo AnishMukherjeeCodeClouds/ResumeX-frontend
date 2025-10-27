@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/app/(general)/(protected)/_context/AuthContext";
 import { loginAction } from "@/app/auth/actions";
 import { LoginSchema } from "@/app/auth/schema";
 import { FormInput } from "@/components/form/FormInput";
@@ -36,6 +37,8 @@ export function LoginForm() {
   registerError(passwordError);
   registerError(emailError);
 
+  const { updateAuthState } = useAuth();
+
   const onSubmit = useCallback(async (data: z.infer<typeof LoginSchema>) => {
     const res = await loginAction(data);
     if (!res.success)
@@ -46,6 +49,7 @@ export function LoginForm() {
       toast.success(res.message, {
         className: "!text-lg",
       });
+      await updateAuthState();
       redirect("/", RedirectType.replace);
     }
   }, []);

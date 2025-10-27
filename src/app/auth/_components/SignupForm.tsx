@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/app/(general)/(protected)/_context/AuthContext";
 import { signupAction } from "@/app/auth/actions";
 import { SignupSchema } from "@/app/auth/schema";
 import { FormInput } from "@/components/form/FormInput";
@@ -47,6 +48,8 @@ export function SignupForm() {
   registerError(emailError);
   registerError(confirmPasswordError);
 
+  const { updateAuthState } = useAuth();
+
   const onSubmit = useCallback(async (data: z.infer<typeof SignupSchema>) => {
     const res = await signupAction(data);
     if (!res.success)
@@ -57,6 +60,7 @@ export function SignupForm() {
       toast.success(res.message, {
         className: "!text-lg",
       });
+      await updateAuthState();
       redirect("/", RedirectType.replace);
     }
   }, []);

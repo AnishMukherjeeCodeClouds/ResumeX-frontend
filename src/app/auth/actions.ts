@@ -80,12 +80,14 @@ export async function loginAction(loginPayload: unknown) {
         sameSite: "strict",
         secure: true,
         maxAge: 60 * 30,
+        path: "/",
       })
       .set("refresh-token", res.refreshToken, {
         httpOnly: true,
         sameSite: "strict",
         secure: true,
         maxAge: 60 * 60 * 24 * 7,
+        path: "/",
       });
 
     return {

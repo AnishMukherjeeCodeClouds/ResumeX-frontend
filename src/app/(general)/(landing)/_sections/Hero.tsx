@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export function HeroSection() {
   return (
-    <section className="px-6 sm:px-10 py-16 flex flex-col-reverse md:flex-row items-center justify-between gap-10 md:gap-16 max-w-6xl mx-auto">
+    <section className="px-10 py-16 flex flex-col-reverse md:flex-row items-center justify-between gap-10 md:gap-16 max-w-6xl mx-auto">
       {/* Left Content */}
       <div className="w-full md:w-1/2 space-y-5 text-center md:text-left">
         <div className="space-y-4">

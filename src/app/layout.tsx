@@ -1,3 +1,4 @@
+import { AuthContextProvider } from "@/app/(general)/(protected)/_context/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -17,11 +18,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`antialiased ${mulish.className}`}>
-        {children}
-        <Toaster richColors />
-      </body>
-    </html>
+    <AuthContextProvider>
+      <html lang="en">
+        <body className={`antialiased ${mulish.className}`}>
+          {children}
+          <Toaster richColors />
+        </body>
+      </html>
+    </AuthContextProvider>
   );
 }

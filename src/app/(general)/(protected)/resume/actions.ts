@@ -16,8 +16,8 @@ export async function createResume(createPayload: unknown) {
     if (!parseResult.success)
       return {
         success: false,
-        message: "Validation failed",
-      };
+        cause: "Please provide valid resume data",
+      } as const;
 
     const payload = parseResult.data;
 
@@ -25,19 +25,20 @@ export async function createResume(createPayload: unknown) {
     const cookieHeader = cookieStore
       .getAll()
       .map((c) => `${c.name}=${c.value}`)
-      .join("; ");
+      .join(";");
 
     await resumeApi
       .headers({
         cookie: cookieHeader,
       })
       .post(payload, "/create")
-      .json()
-      .then(console.log);
+      .json();
+
+    return { success: true } as const;
   } catch (error) {
     return {
       success: false,
-      message: JSON.parse((error as Error).message).message,
-    };
+      cause: JSON.parse((error as Error).message).message,
+    } as const;
   }
 }

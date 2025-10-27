@@ -6,13 +6,14 @@ import { DownloadIcon, PrinterIcon, ServerIcon } from "lucide-react";
 import { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
 import { useReactToPrint } from "react-to-print";
+import { toast } from "sonner";
 
 export function ResumeSave({
   resumeRef,
 }: {
   resumeRef: RefObject<HTMLDivElement | null>;
 }) {
-  const { handleSubmit } = useFormContext<ResumeSchemaType>();
+  const { handleSubmit, formState } = useFormContext<ResumeSchemaType>();
   const reactToPrint = useReactToPrint({ contentRef: resumeRef! });
 
   return (
@@ -38,7 +39,17 @@ export function ResumeSave({
         <Button
           variant="ghost"
           className="cursor-pointer"
-          onClick={handleSubmit(handleResumeSubmission)}
+          onClick={() => {
+            if (Object.keys(formState.errors).length > 0) {
+              console.log(formState.errors);
+              toast.error("Please provide valid resume data", {
+                className: "!text-lg",
+              });
+            } else {
+              handleSubmit(handleResumeSubmission)();
+              window.localStorage.removeItem("resume-create-data");
+            }
+          }}
         >
           <ServerIcon />
           <p className="md:text-lg">Save to cloud</p>
