@@ -1,8 +1,6 @@
 "use server";
 
-import {
-  checkAuthenticated
-} from "@/app/(general)/(protected)/auth-check";
+import { checkAuthenticated } from "@/app/(general)/(protected)/auth-check";
 import { ReturnSchema } from "@/app/auth/schema";
 import { StatusCodes } from "http-status-codes";
 import { cookies } from "next/headers";
@@ -16,47 +14,37 @@ const authApi = wretch(`${SERVER}/auth`);
 async function refreshAccessToken(refreshToken: unknown) {
   z.jwt().parse(refreshToken);
 
-  console.log("refresh called");
-
   const tokens = await authApi
-  .url("/refresh")
-  .post({ refreshToken })
-  .json<z.infer<typeof ReturnSchema>>()
-  .then(({ accessToken, refreshToken }) => ({
-    accessToken,
-    refreshToken
-  }));
-
-  console.log(tokens);
+    .url("/refresh")
+    .post({ refreshToken })
+    .json<z.infer<typeof ReturnSchema>>()
+    .then(({ accessToken, refreshToken }) => ({
+      accessToken,
+      refreshToken,
+    }));
 
   const cookieStore = await cookies();
-  try {
-    cookieStore.delete("access-token");
-    cookieStore.delete("refresh-token");
-  } catch (error) {
-    console.error(error);
-  }
 
   console.log("Deleted ", cookieStore);
   cookieStore
-  .set({
-    name: "access-token",
-    value: tokens.accessToken,
-    httpOnly: true,
-    sameSite: "strict",
-    secure: true,
-    maxAge: 60 * 30,
-    path: "/"
-  })
-  .set({
-    name: "refresh-token",
-    value: tokens.refreshToken,
-    httpOnly: true,
-    sameSite: "strict",
-    secure: true,
-    maxAge: 60 * 60 * 24 * 7,
-    path: "/"
-  });
+    .set({
+      name: "access-token",
+      value: tokens.accessToken,
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+      maxAge: 60 * 30,
+      path: "/",
+    })
+    .set({
+      name: "refresh-token",
+      value: tokens.refreshToken,
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+      maxAge: 60 * 60 * 24 * 7,
+      path: "/",
+    });
 
   return await extractUserDataFromToken(tokens.accessToken);
 }
@@ -69,17 +57,17 @@ async function extractUserDataFromToken(token: unknown) {
     userDetails: z.object({
       id: z.string(),
       name: z.string(),
-      email: z.email()
+      email: z.email(),
     }),
-    statusCode: z.enum(StatusCodes)
+    statusCode: z.enum(StatusCodes),
   });
 
   const { userDetails } = await authApi
-  .url("/me")
-  .headers({ cookie: `access-token=${accessToken}` })
-  .get()
-  .json<z.infer<typeof UserReturnSchema>>()
-  .then((data) => data);
+    .url("/me")
+    .headers({ cookie: `access-token=${accessToken}` })
+    .get()
+    .json<z.infer<typeof UserReturnSchema>>()
+    .then((data) => data);
 
   return userDetails;
 }

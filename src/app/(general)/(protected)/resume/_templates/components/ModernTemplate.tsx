@@ -1,6 +1,9 @@
 "use client";
 
-import { formatDate } from "@/app/(general)/(protected)/resume/_templates/utils";
+import {
+  extractUsername,
+  formatDate,
+} from "@/app/(general)/(protected)/resume/_templates/utils";
 import { ResumeSchema } from "@/app/(general)/(protected)/resume/resume-schema";
 import {
   GithubIcon,
@@ -13,22 +16,6 @@ import {
 } from "lucide-react";
 import React, { Ref } from "react";
 import z from "zod";
-
-const extractUsername = (url: string): string => {
-  try {
-    const u = new URL(url);
-    const host = u.hostname.replace(/^www\./, "");
-    const parts = u.pathname.split("/").filter(Boolean);
-    if (host.includes("linkedin.com") && parts[0] === "in")
-      return parts[1] || host;
-    if (host.includes("github.com")) return parts[0] || host;
-    if (host.includes("x.com") || host.includes("twitter.com"))
-      return parts[0] || host;
-    return parts[0] || host;
-  } catch {
-    return url;
-  }
-};
 
 export function ModernTemplateReact({
   data,

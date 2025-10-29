@@ -80,14 +80,12 @@ export function ProjectsForm() {
                 {/* Date Fields */}
                 <div className="grid grid-cols-2 gap-7">
                   <FormInput
-                    className="md:!pt-3 md:!pb-9"
                     type="date"
                     control={control}
                     label={"Start Date"}
                     name={`projects.${index}.startDate`}
                   />
                   <FormInput
-                    className="md:!pt-3 md:!pb-9"
                     type="date"
                     control={control}
                     label={"End Date"}

@@ -9,9 +9,12 @@ import { ProjectsForm } from "@/app/(general)/(protected)/resume/_forms/Projects
 import { SkillsForm } from "@/app/(general)/(protected)/resume/_forms/SkillsForm";
 import { SocialsForm } from "@/app/(general)/(protected)/resume/_forms/SocialsForm";
 import { ResumeSchemaType } from "@/app/(general)/(protected)/resume/resume-schema";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import * as React from "react";
+import { useCallback } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 
 const tabs = [
@@ -59,9 +62,12 @@ const tabs = [
 
 export function AnimatedUnderlineTabs() {
   const pathname = usePathname();
+  const { trigger, control } = useFormContext<ResumeSchemaType>();
+  const data = useWatch({ control });
 
   const [activeTab, setActiveTab] =
     React.useState<(typeof tabs)[number]["value"]>("personalDetails");
+  const activeTabIndex = tabs.findIndex((tab) => tab.value === activeTab);
   const tabRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
   const [underlineStyle, setUnderlineStyle] = React.useState({
     left: 0,
@@ -82,34 +88,38 @@ export function AnimatedUnderlineTabs() {
     }
   }, [activeTab]);
 
-  const { trigger, control } = useFormContext<ResumeSchemaType>();
-  const data = useWatch({ control });
+  const changeTab = useCallback(
+    async (v: (typeof tabs)[number]["value"]) => {
+      const triggerFields = activeTab.split("-") as (keyof ResumeSchemaType)[];
+      const isValid = await trigger(triggerFields);
+      if (!isValid) return;
+
+      setActiveTab(v);
+
+      if (pathname.startsWith("/resume/new"))
+        localStorage.setItem("resume-create-data", JSON.stringify(data));
+      else if (pathname.startsWith("/resume/edit")) {
+        const resumeId = pathname.split("/").at(-1);
+        console.log(data);
+        localStorage.setItem(
+          `resume-edit-data-${resumeId}`,
+          JSON.stringify(data),
+        );
+      }
+    },
+    [activeTab, data, pathname],
+  );
+
   return (
     <div>
       <Tabs
         value={activeTab}
         onValueChange={async (v) => {
-          const triggerFields = activeTab.split(
-            "-",
-          ) as (keyof ResumeSchemaType)[];
-          const isValid = await trigger(triggerFields);
-          if (!isValid) return;
-
-          setActiveTab(v as (typeof tabs)[number]["value"]);
-
-          if (pathname.startsWith("/resume/new"))
-            localStorage.setItem("resume-create-data", JSON.stringify(data));
-          else if (pathname.startsWith("/resume/edit")) {
-            const resumeId = pathname.split("/").at(-1);
-            localStorage.setItem(
-              `resume-edit-data-${resumeId}`,
-              JSON.stringify(data),
-            );
-          }
+          await changeTab(v as (typeof tabs)[number]["value"]);
         }}
         className="gap-4"
       >
-        <TabsList className="bg-background relative rounded-none px-1 h-auto w-full overflow-x-scroll">
+        <TabsList className="bg-background relative rounded-none px-1 h-auto w-full overflow-x-scroll lg:overflow-x-hidden">
           {tabs.map((tab, index) => (
             <TabsTrigger
               key={tab.value}
@@ -123,6 +133,29 @@ export function AnimatedUnderlineTabs() {
             </TabsTrigger>
           ))}
         </TabsList>
+
+        <div className="flex justify-end gap-3">
+          <Button
+            type="button"
+            disabled={activeTabIndex === 0}
+            variant="secondary"
+            className="rounded-full md:!px-4 cursor-pointer"
+            onClick={() => changeTab(tabs[activeTabIndex - 1].value)}
+          >
+            <ChevronLeftIcon />
+            <p className="text-base md:text-lg">Prev</p>
+          </Button>
+          <Button
+            type="button"
+            disabled={activeTabIndex === tabs.length - 1}
+            variant="secondary"
+            className="rounded-full md:!px-4 cursor-pointer"
+            onClick={() => changeTab(tabs[activeTabIndex + 1].value)}
+          >
+            <ChevronRightIcon />
+            <p className="text-base md:text-lg">Next</p>
+          </Button>
+        </div>
 
         {tabs.map((tab, i) => (
           <TabsContent key={i} value={tab.value}>

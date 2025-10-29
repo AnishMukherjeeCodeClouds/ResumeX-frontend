@@ -9,8 +9,8 @@ import {
 } from "@/app/(general)/(protected)/resume/resume-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname } from "next/navigation";
-import { use, useEffect } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import React, { use, useEffect } from "react";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 
 export function MainForm({
   dataPromise,
@@ -25,6 +25,7 @@ export function MainForm({
 }) {
   const fetchedData = dataPromise ? use(dataPromise) : undefined;
   const pathName = usePathname();
+  console.log(fetchedData);
 
   const methods = useForm<ResumeSchemaType>({
     defaultValues: TEMPLATE_INITIAL_STATE,
@@ -45,6 +46,7 @@ export function MainForm({
             ? fetchedData.resumeData
             : TEMPLATE_INITIAL_STATE,
       );
+      console.log(methods.formState);
     }
 
     if (pathName.startsWith("/resume/new")) {
@@ -52,6 +54,7 @@ export function MainForm({
       methods.reset(existing ? JSON.parse(existing) : TEMPLATE_INITIAL_STATE);
     }
   }, []);
+  const data = useWatch({ control: methods.control });
 
   return (
     <FormProvider {...methods}>
@@ -70,6 +73,10 @@ export function MainForm({
         <div className="overflow-y-auto">
           <ResumePreview />
         </div>
+        {/*<ElegantTemplateReact*/}
+        {/*  data={data as ResumeSchemaType}*/}
+        {/*  accentColor={data.accentColor ?? "#27407e"}*/}
+        {/*/>*/}
       </div>
     </FormProvider>
   );
