@@ -23,7 +23,7 @@ export function ResumePreview() {
       <K
         ref={resumeTemplateRef}
         data={data as ResumeSchemaType}
-        accentColor={accentColor ?? "#000"}
+        accentColor={accentColor ?? "#27407e"}
       />
     </div>
   );

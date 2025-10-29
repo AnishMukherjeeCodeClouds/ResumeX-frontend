@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function BottomCTASection() {
   return (
@@ -16,18 +17,22 @@ export function BottomCTASection() {
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-          <Button
-            variant="secondary"
-            className="text-lg py-4 px-10 rounded-full text-accent2"
-          >
-            Build Your Resume
-          </Button>
-          <Button
-            variant="outline"
-            className="text-lg py-4 px-10 rounded-full border border-white text-white hover:!bg-accent2/60 hover:text-white"
-          >
-            See Templates
-          </Button>
+          <Link href="/dashboard">
+            <Button
+              variant="secondary"
+              className="text-lg py-4 px-10 rounded-full text-accent2"
+            >
+              Build Your Resume
+            </Button>
+          </Link>
+          <Link href="/dashboard">
+            <Button
+              variant="outline"
+              className="text-lg py-4 px-10 rounded-full border border-white text-white hover:!bg-accent2/60 hover:text-white"
+            >
+              See Templates
+            </Button>
+          </Link>
         </div>
 
         <p className="text-sm text-gray-200 mt-4">

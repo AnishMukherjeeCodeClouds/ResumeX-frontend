@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/app/(general)/(protected)/_context/AuthContext";
 import SheetWithNavigationMenu from "@/app/(general)/_components/NavSidebar";
+import { logoutAction } from "@/app/auth/actions";
 import { Button } from "@/components/ui/button";
 import {
   HomeIcon,
@@ -94,14 +95,16 @@ export function Navbar() {
           </>
         ) : (
           <div className="flex items-center gap-3 lg:gap-5">
-            <Button variant="ghost">
+            <Button variant="ghost" onClick={logoutAction}>
               <LogOutIcon className="size-7 lg:size-8 shrink-0" />
               <p className="text-lg lg:text-xl">Log out</p>
             </Button>
-            <div className="flex gap-3 items-center">
-              <UserIcon className="size-7 p-2 rounded-full box-content bg-[#27407e] text-white" />
-              <p className="text-lg lg:text-xl">{user?.name}</p>
-            </div>
+            <Link href="/dashboard">
+              <div className="flex gap-3 items-center bg-gray-200 rounded-full pr-5">
+                <UserIcon className="size-7 p-2 rounded-full box-content bg-[#27407e] text-white" />
+                <p className="text-lg lg:text-xl">{user?.name}</p>
+              </div>
+            </Link>
           </div>
         )}
       </div>

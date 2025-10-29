@@ -117,7 +117,7 @@ export const TEMPLATE_PREVIEW_DATA: ResumeSchemaType = {
 };
 export const TEMPLATE_INITIAL_STATE: ResumeSchemaType = {
   template: "Classic",
-  accentColor: "#2563eb",
+  accentColor: "#27407e",
   personalDetails: {
     fullName: "",
     email: "",

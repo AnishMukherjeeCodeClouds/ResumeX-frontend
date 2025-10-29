@@ -1,7 +1,9 @@
 "use server";
 
+import { checkAuthenticated } from "@/app/(general)/(protected)/auth-check";
 import { LoginSchema, ReturnSchema, SignupSchema } from "@/app/auth/schema";
 import { cookies } from "next/headers";
+import { redirect, RedirectType } from "next/navigation";
 import wretch from "wretch";
 import z from "zod";
 
@@ -100,4 +102,20 @@ export async function loginAction(loginPayload: unknown) {
       message: JSON.parse((error as Error).message).message,
     };
   }
+}
+
+export async function logoutAction() {
+  try {
+    if (!(await checkAuthenticated()))
+      return { success: false, cause: "Authentication failed" };
+
+    const cookieStore = await cookies();
+    cookieStore.delete("access-token").delete("refresh-token");
+  } catch (error) {
+    return {
+      success: false,
+      cause: JSON.parse((error as Error).message).message,
+    };
+  }
+  redirect("/", RedirectType.replace);
 }

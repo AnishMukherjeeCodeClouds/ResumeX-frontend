@@ -1,5 +1,6 @@
 import { HeroIcon } from "@/app/(general)/(landing)/_icons/HeroIcon";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -17,15 +18,19 @@ export function HeroSection() {
         </div>
 
         <div className="flex flex-col sm:flex-row md:justify-start justify-center gap-3 pt-3">
-          <Button className="text-lg py-3 px-8 rounded-full bg-accent2 hover:opacity-90 transition">
-            Build Your Resume
-          </Button>
-          <Button
-            variant="outline"
-            className="text-lg py-3 px-8 rounded-full border !border-accent2 text-accent2 bg-white hover:bg-accent2/10 transition"
-          >
-            Check our templates
-          </Button>
+          <Link href="/dashboard">
+            <Button className="text-lg py-3 px-8 rounded-full bg-accent2 hover:opacity-90 transition">
+              Build Your Resume
+            </Button>
+          </Link>
+          <Link href="/dashboard">
+            <Button
+              variant="outline"
+              className="text-lg py-3 px-8 rounded-full border !border-accent2 text-accent2 bg-white hover:bg-accent2/10 transition"
+            >
+              Check our templates
+            </Button>
+          </Link>
         </div>
       </div>
 

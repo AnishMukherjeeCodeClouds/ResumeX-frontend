@@ -1,12 +1,29 @@
-import { createResume } from "@/app/(general)/(protected)/resume/actions";
+import {
+  createResume,
+  editResume,
+} from "@/app/(general)/(protected)/resume/actions";
 import { ResumeSchemaType } from "@/app/(general)/(protected)/resume/resume-schema";
 import { toast } from "sonner";
 
-export async function handleResumeSubmission(data: ResumeSchemaType) {
-  console.log(data);
+export async function handleResumeCreation(data: ResumeSchemaType) {
   const result = await createResume(data);
   if (result.success) {
     toast.success("Resume successfully created", {
+      className: "!text-lg",
+    });
+  } else {
+    toast.error(result.cause, {
+      className: "!text-lg",
+    });
+  }
+}
+export async function handleResumeEditing(
+  resumeId: string,
+  data: ResumeSchemaType,
+) {
+  const result = await editResume(data, resumeId);
+  if (result.success) {
+    toast.success("Resume successfully updated", {
       className: "!text-lg",
     });
   } else {

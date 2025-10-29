@@ -14,7 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
-import { ReactNode, useRef } from "react";
+import { ReactNode, useRef, useState } from "react";
 
 export function ResumeCreateDialog({
   trigger,
@@ -26,6 +26,7 @@ export function ResumeCreateDialog({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const existing = window.localStorage.getItem("resume-create-data");
   const router = useRouter();
+  const [overwrite, setOverwrite] = useState<boolean>(false);
 
   return (
     <Dialog>
@@ -52,7 +53,7 @@ export function ResumeCreateDialog({
               </>
             )}
           </DialogHeader>
-          {!existing && (
+          {((existing && overwrite) || !existing) && (
             <div className="grid gap-4">
               <InputOverlappingLabel
                 ref={inputRef}
@@ -64,27 +65,32 @@ export function ResumeCreateDialog({
             </div>
           )}
           <DialogFooter>
-            {existing ? (
+            {existing && !overwrite ? (
               <>
+                {/*<DialogClose asChild>*/}
+                {/*bg-[#27407e]*/}
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setOverwrite(true);
+                    // window.localStorage.setItem(
+                    //   "resume-create-data",
+                    //   JSON.stringify({
+                    //     ...TEMPLATE_INITIAL_STATE,
+                    //     template,
+                    //   }),
+                    // );
+                    // router.push("/resume/new");
+                  }}
+                >
+                  Overwrite
+                </Button>
+                {/*</DialogClose>*/}
                 <DialogClose asChild>
                   <Button
-                    variant="outline"
-                    onClick={() => {
-                      window.localStorage.setItem(
-                        "resume-create-data",
-                        JSON.stringify({
-                          ...TEMPLATE_INITIAL_STATE,
-                          template,
-                        }),
-                      );
-                      router.push("/resume/new");
-                    }}
+                    className="bg-[#27407e]"
+                    onClick={() => router.push("/resume/new")}
                   >
-                    Overwrite
-                  </Button>
-                </DialogClose>
-                <DialogClose asChild>
-                  <Button onClick={() => router.push("/resume/new")}>
                     Edit existing data
                   </Button>
                 </DialogClose>
@@ -92,12 +98,17 @@ export function ResumeCreateDialog({
             ) : (
               <>
                 <DialogClose asChild>
-                  <Button type="button" variant="outline">
+                  <Button
+                    className="lg:text-lg"
+                    type="button"
+                    variant="outline"
+                  >
                     Cancel
                   </Button>
                 </DialogClose>
                 {/*<DialogClose asChild>*/}
                 <Button
+                  className="bg-[#27407e] lg:text-lg"
                   onClick={() => {
                     if (!inputRef.current) return;
                     const isValid = inputRef.current.reportValidity();

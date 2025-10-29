@@ -8,7 +8,7 @@ export const MAX_SKILLS = 8;
 export const MAX_CERTIFICATIONS = 2;
 export const MAX_LANGUAGES = 5;
 
-const DateSchema = (error?: string) => z.iso.date(error);
+const DateSchema = (error?: string) => z.string(error);
 
 const PersonalDetailsSchema = z.object(
   {

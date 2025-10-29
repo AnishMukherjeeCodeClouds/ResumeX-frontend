@@ -8,10 +8,24 @@ import {
   ResumeSchemaType,
 } from "@/app/(general)/(protected)/resume/resume-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { use, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-export function MainForm() {
+export function MainForm({
+  dataPromise,
+}: {
+  dataPromise?: Promise<
+    | {
+        success: true;
+        resumeData: ResumeSchemaType;
+      }
+    | { success: false; cause: string }
+  >;
+}) {
+  const fetchedData = dataPromise ? use(dataPromise) : undefined;
+  const pathName = usePathname();
+
   const methods = useForm<ResumeSchemaType>({
     defaultValues: TEMPLATE_INITIAL_STATE,
     resolver: zodResolver(ResumeSchema),
@@ -19,8 +33,24 @@ export function MainForm() {
   });
 
   useEffect(() => {
-    const existing = window.localStorage.getItem("resume-create-data");
-    methods.reset(existing ? JSON.parse(existing) : TEMPLATE_INITIAL_STATE);
+    if (pathName.startsWith("/resume/edit")) {
+      const resumeId = pathName.split("/").at(-1);
+      const existing = window.localStorage.getItem(
+        `resume-edit-data-${resumeId}`,
+      );
+      methods.reset(
+        existing
+          ? JSON.parse(existing)
+          : fetchedData && fetchedData.success
+            ? fetchedData.resumeData
+            : TEMPLATE_INITIAL_STATE,
+      );
+    }
+
+    if (pathName.startsWith("/resume/new")) {
+      const existing = window.localStorage.getItem("resume-create-data");
+      methods.reset(existing ? JSON.parse(existing) : TEMPLATE_INITIAL_STATE);
+    }
   }, []);
 
   return (

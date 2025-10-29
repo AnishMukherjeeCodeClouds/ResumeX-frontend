@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteResume } from "@/app/(general)/(protected)/resume/actions";
 import {
   Table,
   TableBody,
@@ -44,35 +45,52 @@ export function ResumeTable({
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full pt-6">
       <div className="[&>div]:max-h-65 [&>div]:rounded-sm [&>div]:border">
         <Table>
           <TableHeader>
-            <TableRow className="bg-background sticky top-0">
-              <TableHead className="text-center text-lg font-semibold">
+            <TableRow className="bg-background sticky top-0 lg:pb-3">
+              <TableHead className="text-center text-lg lg:text-xl font-semibold">
                 Title
               </TableHead>
-              <TableHead className="text-center text-lg font-semibold">
+              <TableHead className="text-center text-lg lg:text-xl font-semibold">
                 Template
               </TableHead>
-              <TableHead className="text-center text-lg font-semibold">
+              <TableHead className="text-center text-lg lg:text-xl font-semibold">
                 Date
               </TableHead>
               <TableHead className="text-center text-lg font-semibold"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
+            {resumes.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center md:text-lg">
+                  You haven't created any resumes yet
+                </TableCell>
+              </TableRow>
+            )}
             {resumes.map((v) => (
               <TableRow
                 key={v.id}
                 onClick={() => router.push(`/resume/edit/${v.id}`)}
               >
-                <TableCell className="text-center">{v.title}</TableCell>
-                <TableCell className="text-center">{v.template}</TableCell>
-                <TableCell className="text-center">
+                <TableCell className="text-center lg:text-lg">
+                  {v.title}
+                </TableCell>
+                <TableCell className="text-center lg:text-lg">
+                  {v.template}
+                </TableCell>
+                <TableCell className="text-center lg:text-lg">
                   {formatter.format(new Date(v.createdAt))}
                 </TableCell>
-                <TableCell className="px-7">
+                <TableCell
+                  className="px-7"
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    await deleteResume(v.id);
+                  }}
+                >
                   <Trash2Icon className="text-red-600" />
                 </TableCell>
               </TableRow>

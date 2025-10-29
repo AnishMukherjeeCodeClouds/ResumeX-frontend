@@ -3,7 +3,7 @@ import { Templates } from "@/app/(general)/(protected)/dashboard/_components/Tem
 
 export default function Page() {
   return (
-    <div className="px-10 py-10">
+    <div className="px-10 py-10 grid grid-cols-1 lg:grid-cols-2">
       {/*  Templates */}
       <Templates />
       {/*  Current resumes */}

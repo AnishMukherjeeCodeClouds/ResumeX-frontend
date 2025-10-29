@@ -1,8 +1,12 @@
 import { ResumeSchemaType } from "@/app/(general)/(protected)/resume/resume-schema";
-import { handleResumeSubmission } from "@/app/(general)/(protected)/resume/submission";
+import {
+  handleResumeCreation,
+  handleResumeEditing,
+} from "@/app/(general)/(protected)/resume/submission";
 import PopoverSlideInBottom from "@/components/shadcn-studio/popover/popover-14";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon, PrinterIcon, ServerIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
 import { useReactToPrint } from "react-to-print";
@@ -14,7 +18,10 @@ export function ResumeSave({
   resumeRef: RefObject<HTMLDivElement | null>;
 }) {
   const { handleSubmit, formState } = useFormContext<ResumeSchemaType>();
-  const reactToPrint = useReactToPrint({ contentRef: resumeRef! });
+  const reactToPrint = useReactToPrint({
+    contentRef: resumeRef,
+  });
+  const pathname = usePathname();
 
   return (
     <PopoverSlideInBottom
@@ -41,13 +48,18 @@ export function ResumeSave({
           className="cursor-pointer"
           onClick={() => {
             if (Object.keys(formState.errors).length > 0) {
-              console.log(formState.errors);
               toast.error("Please provide valid resume data", {
                 className: "!text-lg",
               });
             } else {
-              handleSubmit(handleResumeSubmission)();
-              window.localStorage.removeItem("resume-create-data");
+              if (pathname.startsWith("/resume/new")) {
+                handleSubmit(handleResumeCreation)();
+                window.localStorage.removeItem("resume-create-data");
+              } else {
+                const resumeId = pathname.split("/").at(-1);
+                handleSubmit(handleResumeEditing.bind(null, resumeId!))();
+                window.localStorage.removeItem(`resume-edit-data-${resumeId}`);
+              }
             }
           }}
         >
