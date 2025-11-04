@@ -34,7 +34,7 @@ export function ResumeCreateDialog({
         <DialogTrigger asChild>{trigger}</DialogTrigger>
         <DialogContent className="data-[state=open]:!zoom-in-0 data-[state=open]:duration-600 sm:max-w-[425px]">
           <DialogHeader>
-            {existing ? (
+            {existing && !overwrite ? (
               <>
                 <DialogTitle className="text-red-700">
                   Unsaved resume data exists
@@ -73,6 +73,7 @@ export function ResumeCreateDialog({
                   variant="outline"
                   onClick={() => {
                     setOverwrite(true);
+                    window.localStorage.removeItem("resume-create-data");
                     // window.localStorage.setItem(
                     //   "resume-create-data",
                     //   JSON.stringify({

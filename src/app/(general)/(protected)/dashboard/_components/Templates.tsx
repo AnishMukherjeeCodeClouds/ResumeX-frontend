@@ -7,7 +7,9 @@ import { Fragment } from "react";
 export function Templates() {
   return (
     <div className="flex flex-col items-center">
-      <h2 className="text-2xl lg:text-3xl p-3 text-center">Our Templates</h2>
+      <h2 className="text-2xl lg:text-3xl p-3 text-center">
+        Choose a template to get started
+      </h2>
       <div className="[&_*]:transition-all [&_*]:duration-300 flex items-center overflow-x-scroll lg:flex-wrap w-full lg:w-xl lg:pl-10">
         {(
           Object.entries(templates) as [

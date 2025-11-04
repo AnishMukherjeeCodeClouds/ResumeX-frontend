@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { DownloadIcon, PrinterIcon, ServerIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { RefObject } from "react";
+import { RefObject, useCallback } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useReactToPrint } from "react-to-print";
 import { toast } from "sonner";
@@ -28,6 +28,21 @@ export function ResumeSave({
     contentRef: resumeRef,
   });
   const pathname = usePathname();
+
+  const saveToCloud = useCallback(() => {
+    if (Object.keys(formState.errors).length > 0) {
+      toast.error("Please provide valid resume data", {
+        className: "!text-lg",
+      });
+    } else {
+      if (pathname.startsWith("/resume/new")) {
+        handleSubmit(handleResumeCreation)();
+      } else {
+        const resumeId = pathname.split("/").at(-1);
+        handleSubmit(handleResumeEditing.bind(null, resumeId!))();
+      }
+    }
+  }, [pathname, formState.errors]);
 
   return (
     <PopoverSlideInBottom
@@ -53,31 +68,17 @@ export function ResumeSave({
           <Button
             variant="ghost"
             className="cursor-pointer"
+            onClick={saveToCloud}
             // onClick={reactToPrint}
           >
             <PrinterIcon />
-            <p className="md:text-lg">Print / Download</p>
+            <p className="md:text-lg">Download</p>
           </Button>
         </PDFDownloadLink>
         <Button
           variant="ghost"
           className="cursor-pointer"
-          onClick={() => {
-            if (Object.keys(formState.errors).length > 0) {
-              toast.error("Please provide valid resume data", {
-                className: "!text-lg",
-              });
-            } else {
-              if (pathname.startsWith("/resume/new")) {
-                handleSubmit(handleResumeCreation)();
-                window.localStorage.removeItem("resume-create-data");
-              } else {
-                const resumeId = pathname.split("/").at(-1);
-                handleSubmit(handleResumeEditing.bind(null, resumeId!))();
-                window.localStorage.removeItem(`resume-edit-data-${resumeId}`);
-              }
-            }
-          }}
+          onClick={saveToCloud}
         >
           <ServerIcon />
           <p className="md:text-lg">Save to cloud</p>

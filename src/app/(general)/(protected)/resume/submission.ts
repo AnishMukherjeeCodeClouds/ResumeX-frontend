@@ -11,6 +11,7 @@ export async function handleResumeCreation(data: ResumeSchemaType) {
     toast.success("Resume successfully created", {
       className: "!text-lg",
     });
+    window.localStorage.removeItem("resume-create-data");
   } else {
     toast.error(result.cause, {
       className: "!text-lg",
@@ -26,6 +27,7 @@ export async function handleResumeEditing(
     toast.success("Resume successfully updated", {
       className: "!text-lg",
     });
+    window.localStorage.removeItem(`resume-edit-data-${resumeId}`);
   } else {
     toast.error(result.cause, {
       className: "!text-lg",

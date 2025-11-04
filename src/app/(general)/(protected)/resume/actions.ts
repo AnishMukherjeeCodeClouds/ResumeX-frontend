@@ -74,7 +74,7 @@ export async function deleteResume(resumeId: unknown) {
     const id = parseResult.data;
 
     const api = await API();
-    await api.delete(`/resume/delete/${resumeId}`);
+    await api.delete(`/resume/delete/${resumeId}`).res();
 
     revalidatePath("/dashboard");
   } catch (error) {

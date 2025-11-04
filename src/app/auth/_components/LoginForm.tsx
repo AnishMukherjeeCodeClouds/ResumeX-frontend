@@ -50,7 +50,7 @@ export function LoginForm() {
         className: "!text-lg",
       });
       await updateAuthState();
-      redirect("/", RedirectType.replace);
+      redirect("/dashboard", RedirectType.replace);
     }
   }, []);
 

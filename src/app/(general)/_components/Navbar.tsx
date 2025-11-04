@@ -18,7 +18,8 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 export function Navbar() {
-  const { user, isAuthenticated, updateAuthState } = useAuth();
+  const { user, isAuthenticated, setIsAuthenticated, updateAuthState } =
+    useAuth();
 
   useEffect(() => {
     if (isAuthenticated) updateAuthState();
@@ -95,7 +96,13 @@ export function Navbar() {
           </>
         ) : (
           <div className="flex items-center gap-3 lg:gap-5">
-            <Button variant="ghost" onClick={logoutAction}>
+            <Button
+              variant="ghost"
+              onClick={async () => {
+                await logoutAction();
+                setIsAuthenticated(false);
+              }}
+            >
               <LogOutIcon className="size-7 lg:size-8 shrink-0" />
               <p className="text-lg lg:text-xl">Log out</p>
             </Button>

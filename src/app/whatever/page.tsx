@@ -1,105 +1,35 @@
 "use client";
 
-import {
-  Document,
-  Font,
-  Image,
-  Page,
-  StyleSheet,
-  Text,
-} from "@react-pdf/renderer";
+import { ClassicTemplateReactPDF } from "@/app/(general)/(protected)/resume/_templates/react-pdf/ClassicTemplate";
+import { TEMPLATE_PREVIEW_DATA } from "@/app/(general)/(protected)/resume/data";
 import dynamic from "next/dynamic";
-import React, { useState } from "react";
+// import { PDFDownloadLink } from "@react-pdf/renderer";
 
-const PDFViewer = dynamic(
-  async () => (await import("@react-pdf/renderer")).PDFViewer,
+const PDFDownloadLink = dynamic(
+  async () => (await import("@react-pdf/renderer")).PDFDownloadLink,
   { ssr: false },
 );
 
-Font.register({
-  family: "Oswald",
-  src: "https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf",
-});
-
-const styles = StyleSheet.create({
-  body: { paddingTop: 35, paddingBottom: 65, paddingHorizontal: 35 },
-  title: { fontSize: 24, textAlign: "center", fontFamily: "Oswald" },
-  author: { fontSize: 12, textAlign: "center", marginBottom: 40 },
-  subtitle: { fontSize: 18, margin: 12, fontFamily: "Oswald" },
-  text: {
-    margin: 12,
-    fontSize: 14,
-    textAlign: "justify",
-    fontFamily: "Times-Roman",
-  },
-  image: { marginVertical: 15, marginHorizontal: 100 },
-  header: {
-    fontSize: 12,
-    marginBottom: 20,
-    textAlign: "center",
-    color: "grey",
-  },
-  pageNumber: {
-    position: "absolute",
-    fontSize: 12,
-    bottom: 30,
-    left: 0,
-    right: 0,
-    textAlign: "center",
-    color: "grey",
-  },
-});
-
-const QuixoteDocument = () => (
-  <Document>
-    <Page style={styles.body}>
-      {" "}
-      <Text style={styles.header} fixed>
-        {" "}
-        ~ Created with react-pdf ~
-      </Text>
-      <Text style={styles.title}>Don Quijote de la Mancha</Text>
-      <Text style={styles.author}>Miguel de Cervantes</Text>
-      <Image style={styles.image} src="/images/quijote1.jpg" />
-      {/* ... the rest of your content ... */}
-      <Text
-        style={styles.pageNumber}
-        render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
-        fixed
-      />
-    </Page>
-  </Document>
-);
-
-export default function PdfPreviewPage() {
-  const [state, setState] = useState("");
+export default function Page() {
   return (
-    <div className="w-screen h-screen">
-      <input
-        type="text"
-        value={state}
-        onChange={(e) => setState(e.target.value)}
-      />
-      <PDFViewer width="100%" height="100%">
-        <Document>
-          <Page style={styles.body}>
-            <Text style={styles.header} fixed>
-              {state}~ Created with react-pdf ~
-            </Text>
-            <Text style={styles.title}>Don Quijote de la Mancha</Text>
-            <Text style={styles.author}>Miguel de Cervantes</Text>
-            <Image style={styles.image} src="/images/quijote1.jpg" />
-            {/* ... the rest of your content ... */}
-            <Text
-              style={styles.pageNumber}
-              render={({ pageNumber, totalPages }) =>
-                `${pageNumber} / ${totalPages}`
-              }
-              fixed
-            />
-          </Page>
-        </Document>
-      </PDFViewer>
+    <div className="h-[297mm] w-[210mm]">
+      <PDFDownloadLink
+        document={
+          <ClassicTemplateReactPDF
+            data={TEMPLATE_PREVIEW_DATA}
+            accentColor={"#27407e"}
+          />
+        }
+        fileName={"resume.pdf"}
+      >
+        Download
+      </PDFDownloadLink>
+      {/*<PDFViewer width="100%" height="100%">*/}
+      {/*  <ClassicTemplateReactPDF*/}
+      {/*    data={TEMPLATE_PREVIEW_DATA}*/}
+      {/*    accentColor={"#27407e"}*/}
+      {/*  />*/}
+      {/*</PDFViewer>*/}
     </div>
   );
 }

@@ -25,7 +25,6 @@ export function MainForm({
 }) {
   const fetchedData = dataPromise ? use(dataPromise) : undefined;
   const pathName = usePathname();
-  console.log(fetchedData);
 
   const methods = useForm<ResumeSchemaType>({
     defaultValues: TEMPLATE_INITIAL_STATE,
@@ -46,7 +45,6 @@ export function MainForm({
             ? fetchedData.resumeData
             : TEMPLATE_INITIAL_STATE,
       );
-      console.log(methods.formState);
     }
 
     if (pathName.startsWith("/resume/new")) {

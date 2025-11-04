@@ -55,7 +55,10 @@ const ExperienceSchema = z.object({
   position: z
     .string("Experience position is required")
     .min(1, "Position should be at least 1 character"),
-  startDate: DateSchema("Experience start date is required"),
+  startDate: DateSchema("Experience start date is required").min(
+    1,
+    "Invalid experience start date",
+  ),
   endDate: DateSchema().optional(),
   description: z.string().min(1, "Description should be at least 1 character"),
 });
@@ -68,7 +71,10 @@ const EducationSchema = z.object({
     .string("Degree is required")
     .min(1, "Degree name should be at least 1 character"),
   field: z.string().optional(),
-  startDate: DateSchema("Education start date is required"),
+  startDate: DateSchema("Education start date is required").min(
+    1,
+    "Invalid education start date",
+  ),
   endDate: DateSchema().optional(),
   grade: z.string().optional(),
 });
@@ -92,7 +98,10 @@ const ProjectSchema = z.object({
       "Invalid GitHub repository URL",
     )
     .optional(),
-  startDate: DateSchema("Project start date is required"),
+  startDate: DateSchema("Project start date is required").min(
+    1,
+    "Invalid project start date",
+  ),
   endDate: DateSchema().optional(),
 });
 
@@ -103,7 +112,10 @@ const CertificationSchema = z.object({
   issuer: z
     .string("Certification issuer is required")
     .min(1, "Issuer name should be at least 1 character"),
-  date: DateSchema("Certification date is required"),
+  date: DateSchema("Certification date is required").min(
+    1,
+    "Invalid certification date",
+  ),
   url: z.url("Certification url is required"),
 });
 
@@ -128,7 +140,7 @@ export const ResumeSchema = z.object({
   accentColor: z
     .string()
     .regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, "Invalid hex color code"),
-  template: z.enum(["Classic", "Modern", "Elegant", "Hybrid"]).optional(),
+  template: z.enum(["Classic", "Modern", "Elegant"]).optional(),
 });
 
 export type ResumeSchemaType = z.infer<typeof ResumeSchema>;

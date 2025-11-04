@@ -9,7 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { redirect, RedirectType } from "next/navigation";
 import React, { useCallback } from "react";
-import { FieldError, useForm } from "react-hook-form";
+import { FieldError, useForm, useWatch } from "react-hook-form";
+import ReactPasswordChecklist from "react-password-checklist";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -41,6 +42,7 @@ export function SignupForm() {
     email: emailError,
     confirmPassword: confirmPasswordError,
   } = form.formState.errors;
+  const data = useWatch({ control: form.control });
 
   registerError(nameError);
   registerError(passwordError);
@@ -61,7 +63,7 @@ export function SignupForm() {
         className: "!text-lg",
       });
       await updateAuthState();
-      redirect("/", RedirectType.replace);
+      redirect("/dashboard", RedirectType.replace);
     }
   }, []);
 
@@ -101,6 +103,22 @@ export function SignupForm() {
           placeholder="E.g. Abcdefgh@12"
           name={"password"}
           type="password"
+        />
+        <ReactPasswordChecklist
+          className="!mb-6"
+          rules={[
+            "minLength",
+            "maxLength",
+            "lowercase",
+            "capital",
+            "number",
+            "specialChar",
+            "match",
+          ]}
+          minLength={8}
+          maxLength={128}
+          value={data.password ?? ""}
+          valueAgain={data.confirmPassword}
         />
         <FormInput
           control={form.control}

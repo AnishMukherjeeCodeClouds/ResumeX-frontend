@@ -1,4 +1,14 @@
 import {
+  GithubIcon,
+  IconWithText,
+  LinkedinIcon,
+  LinkIcon,
+  LocationIcon,
+  MailIcon,
+  PhoneIcon,
+  WebIcon,
+} from "@/app/(general)/(protected)/resume/_templates/icons";
+import {
   extractUsername,
   formatDate,
 } from "@/app/(general)/(protected)/resume/_templates/utils";
@@ -39,7 +49,8 @@ const styles = (accentColor: string) =>
     },
     contactInfo: {
       flexDirection: "row",
-      gap: 5,
+      alignItems: "center",
+      gap: 8,
       fontSize: 10,
       color: "#555",
       flexWrap: "wrap",
@@ -121,33 +132,78 @@ export function ClassicTemplateReactPDF({
             {/* Contact Info */}
             <View style={stylesWithColor.contactInfo}>
               {data.personalDetails.email && (
-                <Text style={stylesWithColor.text}>
-                  {data.personalDetails.email}
-                </Text>
+                <IconWithText
+                  icon={<MailIcon />}
+                  text={
+                    <Text style={stylesWithColor.text}>
+                      {data.personalDetails.email}
+                    </Text>
+                  }
+                />
               )}
               {data.personalDetails.phone && (
-                <Text style={stylesWithColor.text}>
-                  {data.personalDetails.phone}
-                </Text>
+                <IconWithText
+                  icon={<PhoneIcon />}
+                  text={
+                    <Text style={stylesWithColor.text}>
+                      {data.personalDetails.phone}
+                    </Text>
+                  }
+                />
               )}
               {data.personalDetails.location && (
-                <Text style={stylesWithColor.text}>
-                  {data.personalDetails.location}
-                </Text>
+                <IconWithText
+                  icon={<LocationIcon />}
+                  text={
+                    <Text style={stylesWithColor.text}>
+                      {data.personalDetails.location}
+                    </Text>
+                  }
+                />
               )}
               {data.socials?.linkedIn && (
-                <Link src={data.socials.linkedIn} style={stylesWithColor.text}>
-                  {`linkedin/${extractUsername(data.socials.linkedIn)}`}
+                <Link
+                  src={data.socials.linkedIn}
+                  style={[stylesWithColor.text, { textDecoration: "none" }]}
+                >
+                  <IconWithText
+                    icon={<LinkedinIcon />}
+                    text={
+                      <Text style={stylesWithColor.text}>
+                        {extractUsername(data.socials.linkedIn)}
+                      </Text>
+                    }
+                  />
                 </Link>
               )}
               {data.socials?.github && (
-                <Link src={data.socials.github} style={stylesWithColor.text}>
-                  {`github/${extractUsername(data.socials.github)}`}
+                <Link
+                  src={data.socials.github}
+                  style={[stylesWithColor.text, { textDecoration: "none" }]}
+                >
+                  <IconWithText
+                    icon={<GithubIcon />}
+                    text={
+                      <Text style={stylesWithColor.text}>
+                        {extractUsername(data.socials.github)}
+                      </Text>
+                    }
+                  />
                 </Link>
               )}
               {data.socials?.portfolio && (
-                <Link src={data.socials.portfolio} style={stylesWithColor.text}>
-                  {`portfolio/${data.socials.portfolio.replace(/^https?:\/\//, "")}`}
+                <Link
+                  src={data.socials.portfolio}
+                  style={[stylesWithColor.text, { textDecoration: "none" }]}
+                >
+                  <IconWithText
+                    icon={<WebIcon />}
+                    text={
+                      <Text style={stylesWithColor.text}>
+                        {data.socials.portfolio.replace(/^https?:\/\//, "")}
+                      </Text>
+                    }
+                  />
                 </Link>
                 // <Text style={stylesWithColor.text}>
                 //   {data.socials.portfolio.replace(/^https?:\/\//, "")}
@@ -271,7 +327,8 @@ export function ClassicTemplateReactPDF({
                             src={proj.githubLink}
                             style={stylesWithColor.text}
                           >
-                            Github
+                            <GithubIcon />
+                            {/*Github*/}
                           </Link>
                         )}
                         {proj.liveLink && (
@@ -279,7 +336,8 @@ export function ClassicTemplateReactPDF({
                             src={proj.liveLink}
                             style={stylesWithColor.text}
                           >
-                            Live
+                            <LinkIcon />
+                            {/*Live*/}
                           </Link>
                         )}
                       </View>
@@ -406,17 +464,33 @@ export function ClassicTemplateReactPDF({
                       >
                         {cert.issuer}
                       </Text>
-                      <Text style={stylesWithColor.dateText}>
-                        {formatDate(cert.date)}
+                      <View
+                        style={[
+                          stylesWithColor.dateText,
+                          {
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 3,
+                          },
+                        ]}
+                      >
+                        <Text>{formatDate(cert.date)}</Text>
                         {cert.url && (
                           <>
-                            <Text> • </Text>
-                            <Link src={cert.url} style={stylesWithColor.text}>
-                              {cert.url}
+                            <Text>•</Text>
+                            <Link
+                              src={cert.url}
+                              style={[
+                                stylesWithColor.text,
+                                { textDecoration: "none" },
+                              ]}
+                            >
+                              <LinkIcon />
+                              {/*{cert.url}*/}
                             </Link>
                           </>
                         )}
-                      </Text>
+                      </View>
                     </View>
                   ))}
                 </View>

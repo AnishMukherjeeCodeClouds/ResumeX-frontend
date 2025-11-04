@@ -25,7 +25,6 @@ async function refreshAccessToken(refreshToken: unknown) {
 
   const cookieStore = await cookies();
 
-  console.log("Deleted ", cookieStore);
   cookieStore
     .set({
       name: "access-token",

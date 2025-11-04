@@ -100,7 +100,6 @@ export function AnimatedUnderlineTabs() {
         localStorage.setItem("resume-create-data", JSON.stringify(data));
       else if (pathname.startsWith("/resume/edit")) {
         const resumeId = pathname.split("/").at(-1);
-        console.log(data);
         localStorage.setItem(
           `resume-edit-data-${resumeId}`,
           JSON.stringify(data),

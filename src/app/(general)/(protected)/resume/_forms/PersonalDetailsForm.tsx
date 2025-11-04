@@ -6,7 +6,7 @@ import { FieldGroup } from "@/components/ui/field";
 import { useFormContext } from "react-hook-form";
 
 export function PersonalDetailsForm() {
-  const { control } = useFormContext<ResumeSchemaType>();
+  const { control, setValue } = useFormContext<ResumeSchemaType>();
 
   useHookFormError("personalDetails");
 
@@ -15,6 +15,13 @@ export function PersonalDetailsForm() {
       <p className="text-2xl mb-5">Personal Details</p>
       <FieldGroup>
         <FormInput
+          onChange={(e) => {
+            const value = e.target.value.replace(/\s+/g, " ").trimStart();
+            setValue("personalDetails.fullName", value, {
+              shouldValidate: true,
+              shouldDirty: true,
+            });
+          }}
           control={control}
           label={"Full Name"}
           name={"personalDetails.fullName"}

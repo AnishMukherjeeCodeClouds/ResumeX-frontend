@@ -33,12 +33,12 @@ export function ElegantTemplateReact({
     >
       {/* Left Sidebar */}
       <aside
-        className="w-[35%] bg-gray-50 p-6 print:p-4 border-r-2"
+        className="w-[35%] bg-gray-50 p-6 print:p-4 border-r-2 break-words"
         style={{ borderColor: accentColor }}
       >
         {/* Name */}
         <h1
-          className="text-3xl font-semibold leading-tight"
+          className="text-3xl font-semibold leading-tight max-w-full text-wrap"
           style={{ color: accentColor }}
         >
           {data.personalDetails.fullName}

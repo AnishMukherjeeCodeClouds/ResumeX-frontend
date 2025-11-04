@@ -1,6 +1,16 @@
 "use client";
 
 import { deleteResume } from "@/app/(general)/(protected)/resume/actions";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -11,7 +21,45 @@ import {
 } from "@/components/ui/table";
 import { Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { use } from "react";
+import { use, useState } from "react";
+
+function ResumeDeleteDialog({
+  isOpen,
+  setIsOpen,
+  resumeId,
+}: {
+  isOpen: boolean;
+  setIsOpen: (val: boolean) => void;
+  resumeId: string | null;
+}) {
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you sure?</DialogTitle>
+          <DialogDescription className="text-base">
+            This action is irreversible
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                await deleteResume(resumeId);
+              }}
+            >
+              Delete
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button type="button">Cancel</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export function ResumeTable({
   promise,
@@ -44,8 +92,16 @@ export function ResumeTable({
     day: "numeric",
   });
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [resumeId, setResumeId] = useState<string | null>(null);
+
   return (
     <div className="w-full pt-6">
+      <ResumeDeleteDialog
+        isOpen={dialogOpen}
+        setIsOpen={setDialogOpen}
+        resumeId={resumeId}
+      />
       <div className="[&>div]:max-h-65 [&>div]:rounded-sm [&>div]:border">
         <Table>
           <TableHeader>
@@ -73,6 +129,7 @@ export function ResumeTable({
             {resumes.map((v) => (
               <TableRow
                 key={v.id}
+                className="cursor-pointer"
                 onClick={() => router.push(`/resume/edit/${v.id}`)}
               >
                 <TableCell className="text-center lg:text-lg">
@@ -88,7 +145,8 @@ export function ResumeTable({
                   className="px-7"
                   onClick={async (e) => {
                     e.stopPropagation();
-                    await deleteResume(v.id);
+                    setResumeId(v.id);
+                    setDialogOpen(true);
                   }}
                 >
                   <Trash2Icon className="text-red-600" />

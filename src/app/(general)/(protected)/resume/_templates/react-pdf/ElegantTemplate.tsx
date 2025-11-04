@@ -1,4 +1,14 @@
 import {
+  GithubIcon,
+  IconWithText,
+  LinkedinIcon,
+  LinkIcon,
+  LocationIcon,
+  MailIcon,
+  PhoneIcon,
+  WebIcon,
+} from "@/app/(general)/(protected)/resume/_templates/icons";
+import {
   extractUsername,
   formatDate,
 } from "@/app/(general)/(protected)/resume/_templates/utils";
@@ -20,8 +30,6 @@ const styles = (accentColor: string) =>
       flexDirection: "row",
       backgroundColor: "white",
       fontFamily: "Helvetica",
-      paddingHorizontal: 20,
-      paddingVertical: 20,
     },
     sidebar: {
       width: "35%",
@@ -34,7 +42,7 @@ const styles = (accentColor: string) =>
       padding: 20,
     },
     name: {
-      fontSize: 24,
+      fontSize: 20,
       fontWeight: "bold",
       color: accentColor,
     },
@@ -126,43 +134,82 @@ export function ElegantTemplateReactPDF({
           </Text>
 
           <View style={{ marginTop: 15, flexDirection: "column", gap: 5 }}>
-            {data.personalDetails.location && (
-              <Text style={[stylesObj.textSmall, stylesObj.textGray]}>
-                {data.personalDetails.location}
-              </Text>
-            )}
             {data.personalDetails.email && (
-              <Text style={[stylesObj.textSmall, stylesObj.textGray]}>
-                {data.personalDetails.email}
-              </Text>
+              <IconWithText
+                icon={<MailIcon />}
+                text={
+                  <Text style={[stylesObj.textSmall, stylesObj.textGray]}>
+                    {data.personalDetails.email}
+                  </Text>
+                }
+              />
             )}
             {data.personalDetails.phone && (
-              <Text style={[stylesObj.textSmall, stylesObj.textGray]}>
-                {data.personalDetails.phone}
-              </Text>
+              <IconWithText
+                icon={<PhoneIcon />}
+                text={
+                  <Text style={[stylesObj.textSmall, stylesObj.textGray]}>
+                    {data.personalDetails.phone}
+                  </Text>
+                }
+              />
+            )}
+            {data.personalDetails.location && (
+              <IconWithText
+                icon={<LocationIcon />}
+                text={
+                  <Text style={[stylesObj.textSmall, stylesObj.textGray]}>
+                    {data.personalDetails.location}
+                  </Text>
+                }
+              />
             )}
 
             {/* Social Links */}
             {data.socials?.linkedIn && (
-              <Text style={[stylesObj.textSmall]}>
-                <Link src={data.socials.linkedIn} style={[stylesObj.textGray]}>
-                  {`linkedin/${extractUsername(data.socials.linkedIn)}`}
-                </Link>
-              </Text>
+              <Link
+                src={data.socials.linkedIn}
+                style={[stylesObj.textGray, { textDecoration: "none" }]}
+              >
+                <IconWithText
+                  icon={<LinkedinIcon />}
+                  text={
+                    <Text style={[stylesObj.textSmall]}>
+                      {extractUsername(data.socials.linkedIn)}
+                    </Text>
+                  }
+                />
+              </Link>
             )}
             {data.socials?.github && (
-              <Text style={[stylesObj.textSmall]}>
-                <Link src={data.socials.github} style={[stylesObj.textGray]}>
-                  {`github/${extractUsername(data.socials.github)}`}
-                </Link>
-              </Text>
+              <Link
+                src={data.socials.github}
+                style={[stylesObj.textGray, { textDecoration: "none" }]}
+              >
+                <IconWithText
+                  icon={<GithubIcon />}
+                  text={
+                    <Text style={[stylesObj.textSmall]}>
+                      {extractUsername(data.socials.github)}
+                    </Text>
+                  }
+                />
+              </Link>
             )}
             {data.socials?.portfolio && (
-              <Text style={[stylesObj.textSmall]}>
-                <Link src={data.socials.portfolio} style={[stylesObj.textGray]}>
-                  {`portfolio/${data.socials.portfolio.replace(/^https?:\/\//, "")}`}
-                </Link>
-              </Text>
+              <Link
+                src={data.socials.portfolio}
+                style={[stylesObj.textGray, { textDecoration: "none" }]}
+              >
+                <IconWithText
+                  icon={<WebIcon />}
+                  text={
+                    <Text style={[stylesObj.textSmall]}>
+                      {data.socials.portfolio.replace(/^https?:\/\//, "")}
+                    </Text>
+                  }
+                />
+              </Link>
             )}
           </View>
 
@@ -297,7 +344,7 @@ export function ElegantTemplateReactPDF({
                               style={[stylesObj.textSmall, stylesObj.textGray]}
                               src={proj.githubLink}
                             >
-                              Github
+                              <GithubIcon />
                             </Link>
                           )}
                           {proj.liveLink && (
@@ -305,7 +352,7 @@ export function ElegantTemplateReactPDF({
                               style={[stylesObj.textSmall, stylesObj.textGray]}
                               src={proj.liveLink}
                             >
-                              Live
+                              <LinkIcon />
                             </Link>
                           )}
                           <Text
@@ -376,18 +423,29 @@ export function ElegantTemplateReactPDF({
                     <Text style={[stylesObj.textSmall, stylesObj.textGray]}>
                       {cert.issuer}
                     </Text>
-                    <Text style={[stylesObj.textSmall, stylesObj.textGray]}>
-                      {formatDate(cert.date)}{" "}
+                    <View
+                      style={[
+                        stylesObj.textSmall,
+                        stylesObj.textGray,
+                        { flexDirection: "row", alignItems: "center", gap: 3 },
+                      ]}
+                    >
+                      <Text>{formatDate(cert.date)} </Text>
                       {cert.url && (
                         <>
-                          <Text> • </Text>
-
-                          <Link style={stylesObj.textGray} wrap>
-                            {cert.url}
+                          <Text>•</Text>
+                          <Link
+                            style={[
+                              stylesObj.textGray,
+                              { textDecoration: "none" },
+                            ]}
+                            wrap
+                          >
+                            <LinkIcon />
                           </Link>
                         </>
                       )}
-                    </Text>
+                    </View>
                   </View>
                 ))}
               </View>
