@@ -51,7 +51,7 @@ export function MainForm({
       const existing = window.localStorage.getItem("resume-create-data");
       methods.reset(existing ? JSON.parse(existing) : TEMPLATE_INITIAL_STATE);
     }
-  }, []);
+  }, [fetchedData]);
   const data = useWatch({ control: methods.control });
 
   return (

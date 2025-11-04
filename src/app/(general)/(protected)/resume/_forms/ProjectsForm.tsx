@@ -10,6 +10,7 @@ import { FieldDescription, FieldGroup, FieldSet } from "@/components/ui/field";
 import { PlusIcon, XIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import { toast } from "sonner";
 
 export function ProjectsForm() {
   const { control, ...form } = useFormContext<ResumeSchemaType>();
@@ -99,12 +100,14 @@ export function ProjectsForm() {
                     label={"Live Link"}
                     name={`projects.${index}.liveLink`}
                     type="url"
+                    placeholder="E.g. https://your-deployed-link"
                   />
                   <FormInput
                     control={control}
                     label={"GitHub Link"}
                     name={`projects.${index}.githubLink`}
                     type="url"
+                    placeholder="E.g. https://github.com/username/repo"
                   />
                 </div>
 
@@ -142,14 +145,25 @@ export function ProjectsForm() {
                           const newTechName =
                             techNameRefs.current[index]?.value;
                           if (newTechName) {
-                            const newTechs = [
-                              ...(form.getValues().projects[index]
-                                .technologies ?? []),
-                              newTechName,
-                            ];
+                            const techsSet = new Set(
+                        form.getValues().projects[index]
+                                  .technologies ?? []
+                            )
+                            
+                          if(techsSet.has(newTechName)) {
+                            toast.error("Skill name already added", {
+                              className: "text-lg!"
+                            })
+                          }
+                          techsSet.add(newTechName)
+                            // const newTechs = [
+                            //   ...(form.getValues().projects[index]
+                            //     .technologies ?? []),
+                            //   newTechName,
+                            // ];
                             form.setValue(
                               `projects.${index}.technologies`,
-                              newTechs,
+                              Array.from(techsSet)
                             );
                             setRandom(Math.random());
                           }

@@ -11,136 +11,142 @@ export const MAX_LANGUAGES = 5;
 const DateSchema = (error?: string) => z.string(error);
 
 const PersonalDetailsSchema = z.object(
-  {
-    fullName: z
-      .string("Full name is required")
-      .min(1, "Full name should be at least 1 character"),
-    designation: z
-      .string("Designation is required")
-      .min(1, "Designation should be at least 1 character"),
-    email: z.email("Email is required").trim().toLowerCase(),
-    phone: z
-      .string()
-      .regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number")
-      .optional(),
-    location: z.string().optional(),
-  },
-  "Personal details are required",
+	{
+		fullName: z
+			.string("Full name is required")
+			.min(1, "Full name should be at least 1 character"),
+		designation: z
+			.string("Designation is required")
+			.min(1, "Designation should be at least 1 character"),
+		email: z.email("Email is required").trim().toLowerCase(),
+		phone: z
+			.string()
+			.regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number")
+			.optional(),
+		location: z.string().optional(),
+	},
+	"Personal details are required",
 );
 
 const SocialsSchema = z.object({
-  linkedIn: z
-    .url("Invalid LinkedIn URL")
-    .regex(
-      /^https:\/\/(www\.)?linkedin\.com\/in\/[A-Za-z0-9_-]+\/?$/,
-      "Invalid LinkedIn profile URL",
-    )
-    .optional(),
+	linkedIn: z
+		.literal("")
+		.or(
+			z
+				.url("Invalid LinkedIn URL")
+				.regex(
+					/^https:\/\/(www\.)?linkedin\.com\/in\/[A-Za-z0-9_-]+\/?$/,
+					"Invalid LinkedIn profile URL",
+				),
+		),
 
-  github: z
-    .url("Invalid GitHub URL")
-    .regex(
-      /^https:\/\/(www\.)?github\.com\/[A-Za-z0-9_-]+\/?$/,
-      "Invalid GitHub profile URL",
-    )
-    .optional(),
+	github: z
+		.literal("")
+		.or(
+			z
+				.url("Invalid GitHub URL")
+				.regex(
+					/^https:\/\/(www\.)?github\.com\/[A-Za-z0-9_-]+\/?$/,
+					"Invalid GitHub profile URL",
+				),
+		),
 
-  portfolio: z.url("Invalid portfolio URL").optional(),
+	portfolio: z.literal("").or(z.url("Invalid portfolio URL")),
 });
 
 const ExperienceSchema = z.object({
-  organization: z
-    .string("Organization name is required")
-    .min(1, "Organization name should be at least 1 character"),
-  position: z
-    .string("Experience position is required")
-    .min(1, "Position should be at least 1 character"),
-  startDate: DateSchema("Experience start date is required").min(
-    1,
-    "Invalid experience start date",
-  ),
-  endDate: DateSchema().optional(),
-  description: z.string().min(1, "Description should be at least 1 character"),
+	organization: z
+		.string("Organization name is required")
+		.min(1, "Organization name should be at least 1 character"),
+	position: z
+		.string("Experience position is required")
+		.min(1, "Position should be at least 1 character"),
+	startDate: DateSchema("Experience start date is required").min(
+		1,
+		"Invalid experience start date",
+	),
+	endDate: DateSchema().optional(),
+	description: z.string().min(1, "Description should be at least 1 character"),
 });
 
 const EducationSchema = z.object({
-  institution: z
-    .string("Institution is required")
-    .min(1, "Institution name should be at least 1 character"),
-  degree: z
-    .string("Degree is required")
-    .min(1, "Degree name should be at least 1 character"),
-  field: z.string().optional(),
-  startDate: DateSchema("Education start date is required").min(
-    1,
-    "Invalid education start date",
-  ),
-  endDate: DateSchema().optional(),
-  grade: z.string().optional(),
+	institution: z
+		.string("Institution is required")
+		.min(1, "Institution name should be at least 1 character"),
+	degree: z
+		.string("Degree is required")
+		.min(1, "Degree name should be at least 1 character"),
+	field: z.string().optional(),
+	startDate: DateSchema("Education start date is required").min(
+		1,
+		"Invalid education start date",
+	),
+	endDate: DateSchema().optional(),
+	grade: z.string().optional(),
 });
 
 const ProjectSchema = z.object({
-  name: z
-    .string("Project name is required")
-    .min(1, "Project name should be at least 1 character"),
-  description: z
-    .string("Project description is required")
-    .min(1, "Description should be at least 1 character"),
-  technologies: z
-    .array(z.string(), "Project technologies are required")
-    .nonempty("At least one project technology is required")
-    .max(MAX_PROJECT_TECHNOLOGIES),
-  liveLink: z.url().optional(),
-  githubLink: z
-    .url()
-    .regex(
-      /^https:\/\/(www\.)?github\.com\/[A-Za-z0-9_-]+\/[A-Za-z0-9_-]+(\/.*)?$/,
-      "Invalid GitHub repository URL",
-    )
-    .optional(),
-  startDate: DateSchema("Project start date is required").min(
-    1,
-    "Invalid project start date",
-  ),
-  endDate: DateSchema().optional(),
+	name: z
+		.string("Project name is required")
+		.min(1, "Project name should be at least 1 character"),
+	description: z
+		.string("Project description is required")
+		.min(1, "Description should be at least 1 character"),
+	technologies: z
+		.array(z.string(), "Project technologies are required")
+		.nonempty("At least one project technology is required")
+		.max(MAX_PROJECT_TECHNOLOGIES),
+	liveLink: z.url().optional(),
+	githubLink: z
+		.url()
+		.regex(
+			/^https:\/\/(www\.)?github\.com\/[A-Za-z0-9_-]+\/[A-Za-z0-9_-]+(\/.*)?$/,
+			"Invalid GitHub repository URL",
+		)
+		.optional(),
+	startDate: DateSchema("Project start date is required").min(
+		1,
+		"Invalid project start date",
+	),
+	endDate: DateSchema().optional(),
 });
 
 const CertificationSchema = z.object({
-  title: z
-    .string("Certification title is required")
-    .min(1, "Certification name should be at least 1 character"),
-  issuer: z
-    .string("Certification issuer is required")
-    .min(1, "Issuer name should be at least 1 character"),
-  date: DateSchema("Certification date is required").min(
-    1,
-    "Invalid certification date",
-  ),
-  url: z.url("Certification url is required"),
+	title: z
+		.string("Certification title is required")
+		.min(1, "Certification name should be at least 1 character"),
+	issuer: z
+		.string("Certification issuer is required")
+		.min(1, "Issuer name should be at least 1 character"),
+	date: DateSchema("Certification date is required").min(
+		1,
+		"Invalid certification date",
+	),
+	url: z.url("Certification url is required"),
 });
 
 export const ResumeSchema = z.object({
-  title: z
-    .string("Resume title is required")
-    .min(2, "Title should be at least 2 characters")
-    .max(255, "Title should be at most 255 characters")
-    .optional(),
-  summary: z
-    .string()
-    .max(250, "Summary should be at most 1000 characters")
-    .optional(),
-  personalDetails: PersonalDetailsSchema,
-  socials: SocialsSchema.optional(),
-  experiences: z.array(ExperienceSchema).max(MAX_EXPERIENCES),
-  educations: z.array(EducationSchema).max(MAX_EDUCATIONS),
-  skills: z.array(z.string()).max(MAX_SKILLS),
-  projects: z.array(ProjectSchema).max(MAX_PROJECTS),
-  certifications: z.array(CertificationSchema).max(MAX_CERTIFICATIONS),
-  languages: z.array(z.string()).max(MAX_LANGUAGES),
-  accentColor: z
-    .string()
-    .regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, "Invalid hex color code"),
-  template: z.enum(["Classic", "Modern", "Elegant"]).optional(),
+	title: z
+		.string("Resume title is required")
+		.min(2, "Title should be at least 2 characters")
+		.max(255, "Title should be at most 255 characters")
+		.optional(),
+	summary: z
+		.string()
+		.max(250, "Summary should be at most 1000 characters")
+		.optional(),
+	personalDetails: PersonalDetailsSchema,
+	socials: SocialsSchema.optional(),
+	experiences: z.array(ExperienceSchema).max(MAX_EXPERIENCES),
+	educations: z.array(EducationSchema).max(MAX_EDUCATIONS),
+	skills: z.array(z.string()).max(MAX_SKILLS),
+	projects: z.array(ProjectSchema).max(MAX_PROJECTS),
+	certifications: z.array(CertificationSchema).max(MAX_CERTIFICATIONS),
+	languages: z.array(z.string()).max(MAX_LANGUAGES),
+	accentColor: z
+		.string()
+		.regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, "Invalid hex color code"),
+	template: z.enum(["Classic", "Modern", "Elegant"]).optional(),
 });
 
 export type ResumeSchemaType = z.infer<typeof ResumeSchema>;

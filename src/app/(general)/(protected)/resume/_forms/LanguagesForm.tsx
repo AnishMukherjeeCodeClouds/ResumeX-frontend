@@ -9,6 +9,7 @@ import { FieldDescription, FieldGroup } from "@/components/ui/field";
 import { PlusIcon, XIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { toast } from "sonner";
 
 export function LanguagesForm() {
   const { setValue, getValues } = useFormContext<ResumeSchemaType>();
@@ -37,11 +38,19 @@ export function LanguagesForm() {
                 onClick={() => {
                   const newLanguage = languageRef.current?.value;
                   if (newLanguage) {
-                    const newLanguages = [
-                      ...(getValues().languages ?? []),
-                      newLanguage,
-                    ];
-                    setValue("languages", newLanguages);
+                    const languagesSet = new Set(getValues().languages ?? [])
+
+                    if(languagesSet.has(newLanguage)) {
+                      toast.error("Technology already added", {
+                        className: "text-lg!"
+                      })
+                    }
+                    languagesSet.add(newLanguage)
+                    // const newLanguages = [
+                    //   ...(getValues().languages ?? []),
+                    //   newLanguage,
+                    // ];
+                    setValue("languages", Array.from(languagesSet));
                     setRandom(Math.random());
                   }
                   if (languageRef.current) languageRef.current.value = "";

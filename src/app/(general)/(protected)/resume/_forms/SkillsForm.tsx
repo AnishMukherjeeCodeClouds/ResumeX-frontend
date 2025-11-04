@@ -9,6 +9,7 @@ import { FieldDescription, FieldGroup } from "@/components/ui/field";
 import { PlusIcon, XIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { toast } from "sonner";
 
 export function SkillsForm() {
   const { setValue, getValues } = useFormContext<ResumeSchemaType>();
@@ -37,11 +38,19 @@ export function SkillsForm() {
                 onClick={() => {
                   const newSkillName = skillRef.current?.value;
                   if (newSkillName) {
-                    const newSkills = [
-                      ...(getValues().skills ?? []),
-                      newSkillName,
-                    ];
-                    setValue("skills", newSkills);
+                    const skillsSet = new Set(getValues().skills ?? [])
+                    if(skillsSet.has(newSkillName)) {
+                      toast.error("Skill already added", {
+                        className: "text-lg!"
+                      })
+                    }
+                    skillsSet.add(newSkillName)
+
+                    // const newSkills = (newSkillName in getValues().skills)? getValues().skills ?? []: [
+                    //   ...(getValues().skills ?? []),
+                    //   newSkillName,
+                    // ];
+                    setValue("skills", Array.from(skillsSet));
                     setRandom(Math.random());
                   }
                   if (skillRef.current) skillRef.current.value = "";
